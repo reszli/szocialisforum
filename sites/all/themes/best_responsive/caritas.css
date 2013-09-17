@@ -1,0 +1,12 @@
+.views-field-field-article-image .item-list ul li {
+	list-style-type: none;
+	float: left;
+	margin: 0 10px 0 0;
+	border: 1px solid #CCCCCC;
+	padding: 6px;
+	height: auto;
+}
+
+.views-field-field-article-tags {
+	clear: both;
+}

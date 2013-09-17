@@ -1,0 +1,308 @@
+<?php
+
+/**
+ * @file
+ * Provides a basic wrapper to database log entries,
+ * so they can be accessed as entities.
+ * Also provide views field and filter handlers, and
+ * allow bulk operations.
+ */
+
+/**
+ * Watchdog detail page and listing path, parameter position in listing 
+ */
+define('BETTER_WATCHDOG_UI_DETAIL_PATH', "admin/reports/event");
+
+define('BETTER_WATCHDOG_UI_VIEW_PATH', "admin/reports/dblog");
+
+define('BETTER_WATCHDOG_UI_PARAMETER_POSITION', 3);
+
+/**
+ * Implements hook_entity_info().
+ */
+function better_watchdog_ui_entity_info() {
+  $return = array(
+    'better_watchdog_ui_watchdog' => array(
+      'label' => t('Watchdog'),
+      'entity class' => 'WatchdogEntity',
+      'controller class' => 'WatchdogEntityController',
+      'base table' => 'watchdog',
+      'fieldable' => FALSE,
+      'entity keys' => array(
+        'id' => 'wid',
+        'bundle' => 'type',
+      ),
+      'bundle keys' => array(
+        'bundle' => 'type',
+      ),
+      'bundles' => array(),
+      'load hook' => 'better_watchdog_ui_watchdog_load',
+      'view modes' => array(
+        'full' => array(
+          'label' => t('Default'),
+          'custom settings' => FALSE,
+        ),
+      ),
+      'label callback' => 'better_watchdog_ui_watchdog_title',
+      'uri callback' => 'better_watchdog_ui_watchdog_uri',
+      'module' => 'better_watchdog_ui',
+    ),
+  );
+
+  return $return;
+}
+
+/**
+ * Watchdog entity uri callback.
+ */
+function better_watchdog_ui_watchdog_uri($watchdog) {
+  return array(
+    'path' => BETTER_WATCHDOG_UI_DETAIL_PATH . '/' . $watchdog->wid,
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function better_watchdog_ui_menu() {
+  $items[BETTER_WATCHDOG_UI_DETAIL_PATH . '/%better_watchdog_ui_watchdog'] = array(
+    'title callback' => 'better_watchdog_ui_watchdog_title',
+    'title arguments' => array(BETTER_WATCHDOG_UI_PARAMETER_POSITION),
+    'page callback' => 'better_watchdog_ui_watchdog_view',
+    'page arguments' => array(BETTER_WATCHDOG_UI_PARAMETER_POSITION),
+    'access arguments' => array('access site reports'),
+    'file' => 'better_watchdog_ui.pages.inc',
+  );
+  $items[BETTER_WATCHDOG_UI_DETAIL_PATH . '/%better_watchdog_ui_watchdog/view'] = array(
+    'title' => 'View',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+  $items[BETTER_WATCHDOG_UI_DETAIL_PATH . '/%better_watchdog_ui_watchdog/delete'] = array(
+    'title callback' => 'better_watchdog_ui_watchdog_title',
+    'title arguments' => array(BETTER_WATCHDOG_UI_PARAMETER_POSITION),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('better_watchdog_ui_watchdog_delete_form', BETTER_WATCHDOG_UI_PARAMETER_POSITION),
+    'access arguments' => array('access site reports'),
+    'file' => 'better_watchdog_ui.pages.inc',
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function better_watchdog_ui_theme($existing, $type, $theme, $path) {
+  return array(
+    'better_watchdog_ui_watchdog' => array(
+      'variables' => array('element' => NULL),
+      'template' => 'templates/better_watchdog_ui_watchdog',
+    ),
+  );
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function better_watchdog_ui_preprocess_better_watchdog_ui_watchdog(&$variables) {
+  $variables['wid'] = $variables['element']->wid;
+  $items_to_display = array(
+    'type',
+    'timestamp',
+    'user',
+    'location',
+    'referer',
+    'message',
+    'severity',
+    'hostname',
+    'operations',
+  );
+  $content = $variables['element']->content;
+  foreach ($items_to_display as $item) {
+    $variables['items'][$content[$item]['#title']] = $content[$item]['#markup'];
+  }
+}
+
+/**
+ * Watchdog class.
+ */
+class WatchdogEntity extends Entity {
+  /**
+   * Deafult label callback.
+   */
+  protected function defaultLabel() {
+    module_load_include('inc', 'better_watchdog_ui', 'better_watchdog_ui.pages');
+    return better_watchdog_ui_watchdog_title($this);
+  }
+
+  /**
+   * Deafult uri callback.
+   */
+  protected function defaultUri() {
+    module_load_include('inc', 'better_watchdog_ui', 'better_watchdog_ui.pages');
+    return better_watchdog_ui_watchdog_uri($this);
+  }
+}
+
+/**
+ * Watchdog Controller class.
+ */
+class WatchdogEntityController extends EntityAPIController {
+
+  /**
+   * Basic creation function.
+   */
+  public function create(array $values = array()) {
+    global $user;
+    $values += array(
+      'title' => '',
+      'description' => '',
+      'created' => REQUEST_TIME,
+      'changed' => REQUEST_TIME,
+      'uid' => $user->uid,
+    );
+    return parent::create($values);
+  }
+
+  /**
+   * Basic build function.
+   */
+  public function buildContent($entity, $view_mode = 'full', $langcode = NULL, $content = array()) {
+    $wrapper = entity_metadata_wrapper('better_watchdog_ui_watchdog', $entity);
+    $content['author'] = array('#markup' => t('Created by: !author', array('!author' => $wrapper->uid->name->value(array('sanitize' => TRUE)))));
+
+    // Make Message themed like default fields.
+    $content['message'] = array(
+      '#theme' => 'field',
+      '#weight' => 0,
+      '#title' => t('Message'),
+      '#access' => TRUE,
+      '#label_display' => 'above',
+      '#view_mode' => 'full',
+      '#language' => LANGUAGE_NONE,
+      '#field_name' => 'message',
+      '#field_type' => 'text',
+      '#entity_type' => 'better_watchdog_ui_watchdog',
+      '#bundle' => $entity->type,
+      '#items' => array(array('value' => $entity->message)),
+      '#formatter' => 'text_default',
+      0 => array('#markup' => check_plain($entity->message)),
+    );
+
+    return parent::buildContent($entity, $view_mode, $langcode, $content);
+  }
+
+}
+
+/**
+ * Load a watchdog entry.
+ */
+function better_watchdog_ui_watchdog_load($wid, $reset = FALSE) {
+  $watchdog = better_watchdog_ui_watchdog_load_multiple(array($wid), array(), $reset);
+  return reset($watchdog);
+}
+
+/**
+ * Load multiple watchdog entries based on certain conditions.
+ */
+function better_watchdog_ui_watchdog_load_multiple($wids = array(), $conditions = array(), $reset = FALSE) {
+  return entity_load('better_watchdog_ui_watchdog', $wids, $conditions, $reset);
+}
+
+// TODO - REMOVE !
+/**
+ * Save watchdog entry.
+ */
+function better_watchdog_ui_watchdog_save($watchdog) {
+  entity_save('better_watchdog_ui_watchdog', $watchdog);
+}
+
+/**
+ * Delete single watchdog entry.
+ */
+function better_watchdog_ui_watchdog_delete($watchdog) {
+  entity_delete('better_watchdog_ui_watchdog', entity_id('better_watchdog_ui_watchdog', $watchdog));
+}
+
+/**
+ * Delete multiple watchdog entries.
+ */
+function better_watchdog_ui_watchdog_delete_multiple($watchdog_ids) {
+  entity_delete_multiple('better_watchdog_ui_watchdog', $watchdog_ids);
+}
+
+/**
+ * Implements hook_entity_property_info_alter().
+ */
+function better_watchdog_ui_entity_property_info_alter(&$info) {
+  $properties = &$info['better_watchdog_ui_watchdog']['properties'];
+
+  $properties['uid'] = array(
+    'label' => t('User'),
+    'type' => 'user',
+    'description' => t('The users.uid of the user who triggered the event.'),
+    'required' => TRUE,
+    'schema field' => 'uid',
+  );
+  $properties['type'] = array(
+    'label' => t('Type'),
+    'type' => 'text',
+    'description' => t('Type of log message, for example "user" or "page not found."'),
+    'schema field' => 'type',
+  );
+  $properties['message'] = array(
+    'label' => t('Message'),
+    'type' => 'text',
+    'description' => t('Text of log message to be passed into the t() function.'),
+    'schema field' => 'message',
+  );
+  $properties['severity'] = array(
+    'label' => t('Severity'),
+    'type' => 'integer',
+    'description' => t('The severity level of the event; ranges from 0 (Emergency) to 7 (Debug)'),
+    'schema field' => 'severity',
+  );
+  $properties['link'] = array(
+    'label' => t('Link'),
+    'type' => 'uri',
+    'description' => t('Link to view the result of the event.'),
+    'schema field' => 'link',
+  );
+  $properties['location'] = array(
+    'label' => t('Location'),
+    'type' => 'uri',
+    'description' => t('URL of the origin of the event.'),
+    'schema field' => 'location',
+  );
+  $properties['referer'] = array(
+    'label' => t('Referer'),
+    'type' => 'uri',
+    'description' => t('URL of referring page.'),
+    'schema field' => 'referer',
+  );
+  $properties['hostname'] = array(
+    'label' => t('Hostname'),
+    'type' => 'text',
+    'description' => t('Hostname of the user who triggered the event.'),
+    'schema field' => 'hostname',
+  );
+  $properties['timestamp'] = array(
+    'label' => t('Date'),
+    'type' => 'integer',
+    'description' => t('Unix timestamp of when event occurred.'),
+    'schema field' => 'timestamp',
+  );
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function better_watchdog_ui_views_api() {
+
+  $api = array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'better_watchdog_ui') . '/views',
+  );
+
+  return $api;
+}
