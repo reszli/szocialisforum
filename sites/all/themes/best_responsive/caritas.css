@@ -1,3 +1,11 @@
+body,
+h1.page-title,
+#sidebar .block > h2  {
+  color: #444;
+}
+h1.page-title {
+  font-size: 1.7em;
+}
 .views-field-field-article-image .item-list ul li {
 	list-style-type: none;
 	float: left;
@@ -9,4 +17,248 @@
 
 .views-field-field-article-tags {
 	clear: both;
+}
+
+#site-logo {
+  padding: 0;
+}
+#sidebar .block {
+  background: #fff;
+  padding: 1em;
+  
+}
+.views-field-field-quote-date {
+  font-weight: bold;
+}
+.views-field-field-quote-text {
+  color: #527906;
+  font-weight: 600;
+  font-style: italic;
+
+}
+.views-field-field-quote-source {
+  display: block;
+  text-align: right;
+  font-style: italic;
+}
+#sidebar .views-field-field-quote-comment a,
+.views-field-description .views-more-link,
+.views-field-field-event-description a {
+  color: #e73420;
+  font-style:  italic;
+  padding-left:  7px;
+}
+#sidebar .more-link,
+#sidebar .views-field-field-quote-comment a:hover,
+.views-field-description .views-more-link:hover,
+.views-field-field-event-description a:hover {
+  text-decoration: underline;
+}
+
+#sidebar #block-system-main-menu h2 {
+  margin-bottom: 0;
+}
+#sidebar #block-system-main-menu h2 span {
+  background: none;
+}
+#block-system-main-menu ul.menu,
+#footer-bottom ul.menu {
+  margin: 0;
+}
+#block-system-main-menu .menu li {
+  list-style-type: none;
+  list-style-image: none;
+}
+#block-system-main-menu .menu a {
+  color: #527906;
+  font-size: 15px;
+  font-weight: bold;
+}
+#content .views-row .views-field-title a:hover,
+#block-system-main-menu .menu a:hover,
+#sidebar .calendar-calendar .mini-day-on a:hover,
+#content .views-row .views-field-field-article-organization a:hover,
+.node-type-article .field-name-field-article-organization a:hover,
+.calendar-calendar td .calendar a:hover,
+.calendar-calendar td .inner div.day a:hover,
+.view .date-nav-wrapper a:hover,
+#sidebar .date-heading a:hover {
+  color: #e73420
+}
+
+.calendar-calendar .mini {
+  text-align: center;
+}
+.calendar-calendar .mini-day-on {
+  background: #527906;
+}
+#sidebar .calendar-calendar .mini-day-on a {
+  color: #fff;
+}
+
+#sidebar .block > h2 span {
+  background: #fff;
+}
+h1.page-title {
+  padding-bottom: 1em;
+}
+.node-type-article h1.page-title {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+#content .views-row {
+  margin-bottom: 3em;
+}
+#content .views-row .views-field-title {
+  line-height: 100%;
+}
+#content .views-row p,
+.node-type-article #content-wrap p,
+.node-type-page #content-wrap p {
+  text-align: justify;
+}
+.node-type-article #content-wrap p,
+.node-type-page #content-wrap p {
+  text-indent: 30px;
+}
+#content .views-row .views-field-title a,
+.node-type-article #content-wrap h1,
+.node-type-page #content-wrap h1 {
+  color: #527906;
+  font-size: 22px;
+  font-weight: bold;
+}
+#content .views-row .views-field-title a {
+  line-height: 1.2em;
+}
+#content .views-row .views-field-field-article-date {
+  margin-right: 15px;
+}
+#content .views-row .views-field-field-article-date,
+.views-field-field-article-organization,
+.views-field-field-article-organization a,
+.page-events .views-field-field-event-date-1 {
+  font-style: italic;
+}
+#content .views-row .views-field-field-article-date,
+#content .views-row .views-field-field-article-organization,
+#content .views-row .views-field-field-article-organization a,
+.views-field-field-article-tags span,
+.views-field-field-article-tags .field-content,
+#content .views-row .views-field-field-article-date,
+.node-type-article .field-name-field-article-date,
+.node-type-article .field-name-field-article-organization a,
+.page-events .views-field-field-event-date-1 {
+  color: #333;
+  font-size: 12px;
+}
+.page-events .views-field-field-event-date-1 {
+  margin-bottom: 10px;
+}
+#content .views-row .views-field-field-article-date,
+.node-type-article .field-name-field-article-date,
+.node-type-article .field-name-field-article-organization{
+  display: inline-block;
+  margin-bottom: 15px;
+}
+.views-field-field-article-tags .views-label {
+  font-weight: bold;
+}
+.views-field-field-article-tags .field-content {
+  display: inline-block;
+  font-style: italic;
+}
+.node-type-article .field-name-field-article-date {
+  margin-right: 15px;
+}
+#edit-actions input,
+#block-user-login .form-actions input{
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+#block-user-login input  {
+  display: block;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.views-field-field-article-image .item-list ul li {
+  width: 28.5%;
+}
+.views-field-field-article-image .item-list ul li img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+#sidebar .date-heading a,
+.calendar-calendar th.days {
+  text-transform: uppercase;
+}
+
+/* big  styles calendar */
+.calendar-calendar td .calendar a {
+  color: #fff;
+  text-decoration: underline;
+}
+.calendar-calendar td .inner div.day a,
+.view .date-nav-wrapper .date-heading h3,
+.view-organization .views-field-name a,
+#sidebar .date-heading a {
+  color: #527906;
+}
+.calendar-calendar .month-view .full td.multi-day .inner .monthview .continues, .calendar-calendar .month-view .full td.multi-day .inner .monthview .cutoff, .calendar-calendar .week-view .full td.multi-day .inner .weekview .continues, .calendar-calendar .week-view .full td.multi-day .inner .weekview .cutoff,
+.calendar-calendar .month-view .full td.multi-day div.monthview, .calendar-calendar .week-view .full td.multi-day div.weekview, .calendar-calendar .day-view .full td.multi-day div.dayview {
+  background: #527906;
+}
+.date-nav-wrapper .date-heading h3 {
+  text-transform: uppercase;
+}
+
+/* footer */
+#footer-area {
+  padding: 20px 40px;
+}
+#block-system-powered-by {
+  float: right;
+}
+#footer-area .region-footer .block {
+  margin-bottom: 0;
+}
+#footer-area ul li.leaf {
+  list-style: none;
+}
+
+
+/* szervezetek */
+.views-field-field-organization-logo {
+  float: left;
+  margin: 4px 15px 0 0;
+}
+.view-organization .views-field-name a {
+  font-size: 1.3em;
+  font-weight: bold;
+}
+.views-field-field-organization-link a {
+  color: #444;
+  display: block;
+  text-decoration: underline;
+  margin: -10px 0 10px;
+}
+.views-field-field-organization-link a:hover {
+  text-decoration: underline;  
+}
+.views-field-description .views-more-link {
+}
+.views-field-field-event-location {
+  margin-bottom: 10px;
+}
+.views-field-field-event-description {
+  text-align: justify;
+}
+
+.page-contact textarea {
+  resize: vertical;
 }
