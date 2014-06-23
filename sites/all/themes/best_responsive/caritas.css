@@ -262,3 +262,24 @@ h1.page-title {
 .page-contact textarea {
   resize: vertical;
 }
+
+/* morzsak */
+#block-views-quote-block.block h2 {
+	margin-bottom: 0;
+}
+#block-views-quote-block .view-header {
+	text-align: right;
+	font-weight: 600;
+}
+.page-taxonomy-term .field-name-field-organization-logo img {
+	float: left;
+	max-height: 300px;
+	margin-right: 20px;
+	border: 1px solid #665;
+}
+.page-taxonomy-term .taxonomy-term-description p {
+	text-align: justify;
+}
+.page-taxonomy-term article h2 a {
+	font-size: 16px;
+}
